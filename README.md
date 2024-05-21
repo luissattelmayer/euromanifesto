@@ -1,0 +1,1 @@
+This repository contains reproducible code to read the Manifestos for the European Elections of 2019 and 2024 of the German parties. The R-code preprocesses the data and the Python Notebook then uses an LLM to classify the sentences by issues according to the Comparative Agendas Project coding scheme.
