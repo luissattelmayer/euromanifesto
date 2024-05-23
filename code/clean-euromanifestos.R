@@ -41,7 +41,7 @@ write_csv(manifestos_clean, here("data" ,"manifestos_clean.csv"))
 
 #####
 
-data <- read_csv("data/euromanifesto_sentences_cap_classified.csv") |> 
+data <- read_csv("data/euromanifesto_sentences_cap_classified_france.csv") |> 
   select(-1)
 
 data <- data |> 
@@ -241,32 +241,27 @@ ggsave("figures/labor_salience.jpeg")
 
 ## national manifestos
 
-deu <- read_csv("data/ger_nat_manifesto_sentences_cap_classified.csv") |> 
-  select(-1) |> 
-  mutate(label = case_when(
-    predicted == 1 ~ "Macroecnomics",
-    predicted == 2 ~ "Civil Rights",
-    predicted == 3 ~ "Health",
-    predicted == 4 ~ "Agriculture",
-    predicted == 5 ~ "Labor",
-    predicted == 6 ~ "Education",
-    predicted == 7 ~ "Environment",
-    predicted == 8 ~ "Energy",
-    predicted == 9 ~ "Immigration",
-    predicted == 10 ~ "Transportation",
-    predicted == 12 ~ "Law and Crime",
-    predicted == 13 ~ "Social Welfare",
-    predicted == 14 ~ "Housing",
-    predicted == 15 ~ "Domestic Commerce",
-    predicted == 16 ~ "Defense",
-    predicted == 17 ~ "Technology",
-    predicted == 18 ~ "Foreign Trade",
-    predicted == 19 ~ "International Affairs",
-    predicted == 20 ~ "Government Operations",
-    predicted == 21 ~ "Public Lands",
-    predicted == 23 ~ "Culture"
-  ),
-  party = str_to_upper(party),
-  year = as.character(year))
+deu <- read_csv("data/Germany_Corpus.csv") |> 
+  filter(date >= 201709) |>
+  mutate(country = "GER",
+         party = case_when(
+           party == 41521 ~ "CDUCSU",
+           party == 41320 ~ "SPD",
+           party == 41953 ~ "AFD",
+           party == 41420 ~ "FDP",
+           party == 41113 ~ "GRÜNE",
+           party == 41223 ~ "LINKE",
+           party == "Sonstige" ~ "Sonstige"
+         ),
+         year = str_sub(as.character(date), 1, 4)) |> 
+  select(-c(countryname, text_id, date)) |> 
+  group_by(party, year) |> 
+  mutate(manifesto = str_c(party, year, sep = "_"))
+
+write_csv(deu, "data/ger_national_manifestos.csv")
 
 
+  
+  
+  
+  
